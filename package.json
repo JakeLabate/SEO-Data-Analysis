@@ -1,0 +1,20 @@
+{
+  "name": "gsc-seo-agent",
+  "version": "1.0.0",
+  "description": "SEO analysis agent for Google Search Console CSV data",
+  "main": "src/index.js",
+  "bin": {
+    "gsc-seo-agent": "bin/gsc-seo-agent.js"
+  },
+  "scripts": {
+    "start": "node bin/gsc-seo-agent.js",
+    "test": "node --test tests/**/*.test.js"
+  },
+  "keywords": [
+    "seo",
+    "google-search-console",
+    "gsc",
+    "analysis"
+  ],
+  "license": "MIT"
+}

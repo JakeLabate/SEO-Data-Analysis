@@ -1,6 +1,6 @@
-# GSC SEO Analysis Agent
+# GSC SEO Analysis Agent (JavaScript)
 
-Lightweight Python agent that performs SEO analysis from Google Search Console (GSC) CSV exports.
+Lightweight JavaScript/Node agent that performs SEO analysis from Google Search Console (GSC) CSV exports.
 
 ## What it does
 
@@ -21,7 +21,13 @@ Lightweight Python agent that performs SEO analysis from Google Search Console (
 ## Quick start
 
 ```bash
-python3 -m gsc_seo_agent --input "/path/to/gsc-export.csv" --output report.md --json-output report.json
+node bin/gsc-seo-agent.js --input "/path/to/gsc-export.csv" --output report.md --json-output report.json
+```
+
+or with npm:
+
+```bash
+npm start -- --input "/path/to/gsc-export.csv" --output report.md --json-output report.json
 ```
 
 ### Optional flags
@@ -54,7 +60,7 @@ Header matching is case-insensitive and tolerant of common aliases.
 ## Run tests
 
 ```bash
-python3 -m unittest discover -s tests -p "test_*.py"
+npm test
 ```
 
 ## Typical workflow
