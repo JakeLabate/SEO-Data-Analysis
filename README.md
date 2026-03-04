@@ -1,72 +1,104 @@
-# GSC SEO Analysis Agent (JavaScript)
+# GSC SEO Analysis Agent (JavaScript + UI)
 
-Lightweight JavaScript/Node agent that performs SEO analysis from Google Search Console (GSC) CSV exports.
+JavaScript/Node app that:
 
-## What it does
+1. Lets a user connect their Google account via OAuth,
+2. Pulls Search Console Search Analytics data through the API,
+3. Runs SEO opportunity analysis,
+4. Shows the output in a browser dashboard.
 
-- Ingests GSC Search Analytics CSV data (with flexible header matching)
-- Calculates key KPIs:
-  - total clicks
-  - total impressions
-  - weighted CTR
-  - weighted average position
-- Finds high-impact opportunities:
-  - low CTR queries with strong visibility
-  - position 8-20 queries with rank-lift potential
-- Computes trend deltas (last N days vs previous N days) when `Date` exists
-- Produces:
-  - Markdown report (human-readable)
-  - JSON analysis payload (machine-readable)
+It also keeps the existing CSV CLI analyzer.
 
-## Quick start
+## Features
+
+- Google Search Console API OAuth flow
+- Property picker (all accessible sites from connected account)
+- Date-range analysis (with trend comparison)
+- KPI snapshot (clicks, impressions, CTR, avg position)
+- Opportunities:
+  - low-CTR query wins
+  - rank-lift opportunities (positions 8-20)
+- Markdown + JSON output in the UI
+- CSV-based CLI mode for offline analysis
+
+---
+
+## 1) Google Cloud setup
+
+1. Go to Google Cloud Console and create/select a project.
+2. Enable **Google Search Console API**.
+3. Configure OAuth consent screen.
+4. Create OAuth client credentials (**Web application**).
+5. Add redirect URI:
+   - `http://localhost:3000/auth/callback`
+
+Copy your credentials for the next step.
+
+---
+
+## 2) Local environment setup
+
+Install dependencies:
 
 ```bash
-node bin/gsc-seo-agent.js --input "/path/to/gsc-export.csv" --output report.md --json-output report.json
+npm install
 ```
 
-or with npm:
+Create env file:
 
 ```bash
-npm start -- --input "/path/to/gsc-export.csv" --output report.md --json-output report.json
+cp .env.example .env
 ```
 
-### Optional flags
+Set values in `.env`:
 
-- `--site "sc-domain:example.com"`: filter a single property if multiple are present
-- `--min-impressions 300`: minimum impressions for opportunity detection
-- `--top-n 15`: include more rows in top tables/opportunities
-- `--trend-window-days 28`: window size for current vs prior period comparison
+```bash
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=http://localhost:3000/auth/callback
+SESSION_SECRET=replace_with_long_random_value
+PORT=3000
+```
 
-## Input format
+---
 
-The agent expects a CSV with at least:
+## 3) Run the web app
 
-- `Clicks`
-- `Impressions`
+```bash
+npm start
+```
 
-It can also use (recommended):
+Open:
 
-- `Query`
-- `Page` / `URL`
-- `CTR`
-- `Position` / `Average Position`
-- `Date`
-- `Country`
-- `Device`
-- `Site URL` / `Property`
+`http://localhost:3000`
 
-Header matching is case-insensitive and tolerant of common aliases.
+Then:
 
-## Run tests
+1. Click **Connect Google Account**
+2. Complete OAuth consent
+3. Pick a Search Console property
+4. Select date range + settings
+5. Click **Run Analysis**
+
+---
+
+## 4) CSV CLI mode (still available)
+
+```bash
+npm run cli -- --input "/path/to/gsc-export.csv" --output report.md --json-output report.json
+```
+
+Useful flags:
+
+- `--site "sc-domain:example.com"`
+- `--min-impressions 300`
+- `--top-n 15`
+- `--trend-window-days 28`
+
+---
+
+## 5) Run tests
 
 ```bash
 npm test
 ```
-
-## Typical workflow
-
-1. Export Search Results data from GSC to CSV.
-2. Run the agent against the export.
-3. Review the Markdown report’s opportunities section.
-4. Prioritize title/meta updates, internal linking, and content refreshes.
-5. Re-run weekly to track trend movement.
